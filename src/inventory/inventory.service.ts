@@ -25,7 +25,7 @@ export class InventoryService {
   }
 
   public async findByCode(code: string) {
-    return await this.inventoryModel.find({ code });
+    return await this.inventoryModel.findOne({ code });
   }
 
   public async getAllInventory() {
@@ -37,7 +37,13 @@ export class InventoryService {
   }
 
   public async updateItem(item: IInventoryDocument) {
-    await this.inventoryModel.findByIdAndUpdate(item._id, item);
+    const updateItem = await this.inventoryModel.findByIdAndUpdate(
+      item._id,
+      item,
+    );
+    if (!updateItem) {
+      throw new HttpException('Item does not exist', HttpStatus.BAD_REQUEST);
+    }
     return await this.inventoryModel.findById(item._id);
   }
 }
