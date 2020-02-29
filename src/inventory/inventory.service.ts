@@ -1,5 +1,5 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { INVENTORY_PROVIDER } from 'src/constants/providers';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { INVENTORY_PROVIDER } from '../constants/providers';
 import { Model } from 'mongoose';
 import {
   IInventoryDocument,
@@ -14,7 +14,18 @@ export class InventoryService {
   ) {}
 
   public async createItem(item: IInventoryItem) {
+    const existingItem = await this.findByCode(item.code);
+    if (existingItem) {
+      throw new HttpException(
+        'Item with this code already created',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return await this.inventoryModel.create(item);
+  }
+
+  public async findByCode(code: string) {
+    return await this.inventoryModel.find({ code });
   }
 
   public async getAllInventory() {

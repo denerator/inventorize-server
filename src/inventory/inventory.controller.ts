@@ -42,10 +42,13 @@ export class InventoryController {
     res.json(data);
   }
 
-  @Get(':itemId')
+  @Get(':itemCode')
   @HttpCode(HttpStatus.OK)
-  public async getItemById(@Param('itemId') id: string, @Res() res: Response) {
-    const data = await this.inventoryService.getInventoryItemById(id);
+  public async getItemById(
+    @Param('itemCode') code: string,
+    @Res() res: Response,
+  ) {
+    const data = await this.inventoryService.findByCode(code);
     res.json(data);
   }
 
