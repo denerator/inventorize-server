@@ -8,6 +8,7 @@ import {
   Get,
   Param,
   Put,
+  Delete,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { InventoryService } from './inventory.service';
@@ -59,6 +60,13 @@ export class InventoryController {
     @Res() res: Response,
   ) {
     const data = await this.inventoryService.updateItem(item);
+    res.json(data);
+  }
+
+  @Delete(':itemId')
+  @HttpCode(HttpStatus.OK)
+  public async deleteItem(@Param('itemId') id: string, @Res() res: Response) {
+    const data = await this.inventoryService.deleteItem(id);
     res.json(data);
   }
 }
