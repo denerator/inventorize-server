@@ -46,4 +46,8 @@ export class InventoryService {
     }
     return await this.inventoryModel.findById(item._id);
   }
+
+  public async deleteItem(id: string) {
+    return await this.inventoryModel.findByIdAndDelete(id);
+  }
 }

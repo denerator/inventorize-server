@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
-import { IUser } from 'src/user/interfaces/user.interface';
+import { IUser } from '../user/interfaces/user.interface';
 import { LoginDTO } from './dto/login.dto';
 
 @Injectable()

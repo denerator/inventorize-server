@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { USER_PROVIDER } from 'src/constants/providers';
+import { USER_PROVIDER } from '../constants/providers';
 import { Model } from 'mongoose';
 import { IDocumentUser, IUser } from './interfaces/user.interface';
 
