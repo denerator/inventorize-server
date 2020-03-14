@@ -6,11 +6,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
-import {
-  IUser,
-  IDocumentUser,
-  IUserRole,
-} from 'src/user/interfaces/user.interface';
+import { IUser, IDocumentUser } from '../user/interfaces/user.interface';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 
@@ -34,7 +30,7 @@ export class AuthService {
       }
       throw new HttpException('Wrong credentials', HttpStatus.BAD_REQUEST);
     }
-    throw new HttpException('There is such user', HttpStatus.BAD_REQUEST);
+    throw new HttpException('There is no such user', HttpStatus.BAD_REQUEST);
   }
 
   public async createUser(user: IUser) {
@@ -46,7 +42,12 @@ export class AuthService {
       );
     }
     const password = await bcrypt.hash(user.password, 10);
-    const dbUser = await this.userService.createUser({ ...user, password });
+    const email = user.email.trim().toLowerCase();
+    const dbUser = await this.userService.createUser({
+      ...user,
+      email,
+      password,
+    });
     return { ...dbUser.toObject(), access_token: this.getAccessToken(dbUser) };
   }
 

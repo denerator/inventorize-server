@@ -17,7 +17,7 @@ import {
 } from './interfaces/inventory.interface';
 import { ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { AdminGuard } from '../auth/guards/admin.guard';
 
 @Controller('inventory')
 export class InventoryController {
@@ -60,4 +60,5 @@ export class InventoryController {
   public async deleteItem(@Param('itemId') id: string) {
     return await this.inventoryService.deleteItem(id);
   }
+
 }

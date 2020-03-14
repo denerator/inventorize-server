@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { USER_PROVIDER } from 'src/constants/providers';
+import { USER_PROVIDER } from '../constants/providers';
 import { Model } from 'mongoose';
 import { IDocumentUser, IUser } from './interfaces/user.interface';
 
@@ -15,7 +15,7 @@ export class UserService {
   }
 
   public async getUserByEmail(email: string) {
-    return await this.userModel.findOne({ email }).lean().exec();
+    return await this.userModel.findOne({ email: email.trim().toLowerCase() }).lean().exec();
   }
 
   public async getOneUser(params: Partial<IDocumentUser>) {
