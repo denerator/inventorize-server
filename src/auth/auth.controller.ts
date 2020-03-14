@@ -7,7 +7,6 @@ import {
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Response } from 'express';
 import { LoginDTO } from './dto/login.dto';
 import { IUser } from 'src/user/interfaces/user.interface';
 
@@ -17,15 +16,15 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  public async login(@Body() loginDTO: LoginDTO, @Res() res: Response) {
-    const user = await this.authService.validateUser(loginDTO);
-    return res.json(user);
+  public async login(@Body() loginDTO: LoginDTO) {
+    const user = await this.authService.login(loginDTO);
+    return user;
   }
 
   @Post('sign-up')
   @HttpCode(HttpStatus.CREATED)
-  public async signUp(@Body() signUpDTO: IUser, @Res() res: Response) {
+  public async signUp(@Body() signUpDTO: IUser) {
     const user = await this.authService.createUser(signUpDTO);
-    return res.json(user);
+    return user;
   }
 }

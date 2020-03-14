@@ -4,19 +4,20 @@ import {
   HttpCode,
   HttpStatus,
   Body,
-  Res,
   Get,
   Param,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
 import { InventoryService } from './inventory.service';
 import {
   IInventoryItem,
   IInventoryDocument,
 } from './interfaces/inventory.interface';
 import { ApiResponse } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 @Controller('inventory')
 export class InventoryController {
@@ -28,45 +29,35 @@ export class InventoryController {
     status: HttpStatus.OK,
     description: 'Inventory item has been successfully created.',
   })
-  public async createInventoryItem(
-    @Body() item: IInventoryItem,
-    @Res() res: Response,
-  ) {
-    const data = await this.inventoryService.createItem(item);
-    res.json(data);
+  public async createInventoryItem(@Body() item: IInventoryItem) {
+    return await this.inventoryService.createItem(item);
   }
 
   @Get()
+  @UseGuards(AdminGuard)
   @HttpCode(HttpStatus.OK)
-  public async getItems(@Res() res: Response) {
-    const data = await this.inventoryService.getAllInventory();
-    res.json(data);
+  public async getItems() {
+    return await this.inventoryService.getAllInventory();
   }
 
   @Get(':itemCode')
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
-  public async getItemById(
-    @Param('itemCode') code: string,
-    @Res() res: Response,
-  ) {
-    const data = await this.inventoryService.findByCode(code);
-    res.json(data);
+  public async getItemById(@Param('itemCode') code: string) {
+    return await this.inventoryService.findByCode(code);
   }
 
   @Put()
+  @UseGuards(AdminGuard)
   @HttpCode(HttpStatus.OK)
-  public async updateItem(
-    @Body() item: IInventoryDocument,
-    @Res() res: Response,
-  ) {
-    const data = await this.inventoryService.updateItem(item);
-    res.json(data);
+  public async updateItem(@Body() item: IInventoryDocument) {
+    return await this.inventoryService.updateItem(item);
   }
 
   @Delete(':itemId')
+  @UseGuards(AdminGuard)
   @HttpCode(HttpStatus.OK)
-  public async deleteItem(@Param('itemId') id: string, @Res() res: Response) {
-    const data = await this.inventoryService.deleteItem(id);
-    res.json(data);
+  public async deleteItem(@Param('itemId') id: string) {
+    return await this.inventoryService.deleteItem(id);
   }
 }

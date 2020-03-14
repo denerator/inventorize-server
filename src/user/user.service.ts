@@ -17,4 +17,8 @@ export class UserService {
   public async getUserByEmail(email: string) {
     return await this.userModel.findOne({ email }).lean().exec();
   }
+
+  public async getOneUser(params: Partial<IDocumentUser>) {
+    return await this.userModel.findOne(params).lean().exec();
+  }
 }
