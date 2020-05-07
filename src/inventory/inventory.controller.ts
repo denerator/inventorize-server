@@ -25,6 +25,7 @@ export class InventoryController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AdminGuard)
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Inventory item has been successfully created.',
@@ -41,7 +42,6 @@ export class InventoryController {
   }
 
   @Get(':itemCode')
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   public async getItemById(@Param('itemCode') code: string) {
     return await this.inventoryService.findByCode(code);
