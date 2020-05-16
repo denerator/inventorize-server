@@ -5,12 +5,17 @@ import {
   IInventoryDocument,
   IInventoryItem,
 } from './interfaces/inventory.interface';
+import { MailerService } from '@nest-modules/mailer';
+import { createMailReport } from '../utils/mail.utils';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class InventoryService {
   constructor(
     @Inject(INVENTORY_PROVIDER)
     private readonly inventoryModel: Model<IInventoryDocument>,
+    private readonly mailerService: MailerService,
+    private readonly userService: UserService,
   ) {}
 
   public async createItem(item: IInventoryItem) {
@@ -49,5 +54,16 @@ export class InventoryService {
 
   public async deleteItem(id: string) {
     return await this.inventoryModel.findByIdAndDelete(id);
+  }
+
+  public async generateReport(userId: string) {
+    const user = await this.userService.getOneUser({ _id: userId });
+    const items = await this.getAllInventory();
+
+    const params = createMailReport({
+      email: user.email,
+      items,
+    });
+    return await this.mailerService.sendMail(params);
   }
 }

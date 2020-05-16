@@ -9,6 +9,7 @@ import {
   Put,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import {
@@ -41,7 +42,7 @@ export class InventoryController {
     return await this.inventoryService.getAllInventory();
   }
 
-  @Get(':itemCode')
+  @Get('code/:itemCode')
   @HttpCode(HttpStatus.OK)
   public async getItemById(@Param('itemCode') code: string) {
     return await this.inventoryService.findByCode(code);
@@ -61,4 +62,10 @@ export class InventoryController {
     return await this.inventoryService.deleteItem(id);
   }
 
+  @Get('/mail-report')
+  @UseGuards(AdminGuard)
+  @HttpCode(HttpStatus.OK)
+  public async getReport(@Req() req) {
+    return await this.inventoryService.generateReport(req.user.userId);
+  }
 }
